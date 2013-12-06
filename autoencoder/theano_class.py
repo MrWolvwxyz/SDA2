@@ -126,15 +126,15 @@ class theano_top:
             self.last_cost = numpy.mean( c )
             if numpy.mean( c ) <= self.stop_val:
                 print ( time.clock() - start_time )
-                numpy.save( 'weights1_train', self.model.W.get_value() )
-                numpy.save( 'bias1_train', self.model.b.get_value() )
-                numpy.save( 'bias2_train', self.model.b_prime.get_value() )
+                #numpy.save( 'weights1_train', self.model.W.get_value() )
+                #numpy.save( 'bias1_train', self.model.b.get_value() )
+                #numpy.save( 'bias2_train', self.model.b_prime.get_value() )
                 return
         #self.print_parts()
         print ( time.clock() - start_time )
-        numpy.save( 'weights1_train', self.model.W.get_value() )
-        numpy.save( 'bias1_train', self.model.b.get_value() )
-        numpy.save( 'bias2_train', self.model.b_prime.get_value() )
+        #numpy.save( 'weights1_train', self.model.W.get_value() )
+        #numpy.save( 'bias1_train', self.model.b.get_value() )
+        #numpy.save( 'bias2_train', self.model.b_prime.get_value() )
         
         
         
@@ -173,15 +173,15 @@ class theano_top:
             print 'Testing epoch %d, cost ' % epoch, numpy.mean( c )
             if numpy.mean( c ) <= self.stop_val:
                 print ( time.clock() - start_time )
-                numpy.save( 'weights1_test', self.model.W.get_value() )
-                numpy.save( 'bias1_test', self.model.b.get_value() )
-                numpy.save( 'bias2_test', self.model.b_prime.get_value() )
+                #numpy.save( 'weights1_test', self.model.W.get_value() )
+                #numpy.save( 'bias1_test', self.model.b.get_value() )
+                #numpy.save( 'bias2_test', self.model.b_prime.get_value() )
                 return
         #self.print_parts()
         print ( time.clock() - start_time )
-        numpy.save( 'weights1_test', self.model.W.get_value() )
-        numpy.save( 'bias1_test', self.model.b.get_value() )
-        numpy.save( 'bias2_test', self.model.b_prime.get_value() )
+        #numpy.save( 'weights1_test', self.model.W.get_value() )
+        #numpy.save( 'bias1_test', self.model.b.get_value() )
+        #numpy.save( 'bias2_test', self.model.b_prime.get_value() )
         
         
         
