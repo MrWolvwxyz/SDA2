@@ -15,7 +15,7 @@ from theano.tensor.shared_randomstreams import RandomStreams
 class dA(object):
     """Denoising Auto-Encoder class (dA)
 
-    Am denoising autoencoders tries to reconstruct the input from a corrupted
+    A denoising autoencoders tries to reconstruct the input from a corrupted
     version of it by projecting it first in a latent space and reprojecting
     it afterwards back in the input space. Please refer to Vincent et al.,2008
     for more details. If x is the input then equation (1) computes a partially
@@ -180,8 +180,8 @@ class dA(object):
         tilde_x = self.get_corrupted_input(self.x, corruption_level)
         y = self.get_hidden_values(tilde_x)
         z = self.get_reconstructed_input(y)
-        self.print_set( y )
-        self.print_set( z )
+        #self.print_set( y )
+        #self.print_set( z )
         if T.sum( z ) == 0: print 'well fuck'
         # note : we sum over the size of a datapoint; if we are using
         #        minibatches, L will be a vector, with one entry per
