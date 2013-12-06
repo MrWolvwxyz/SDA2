@@ -15,6 +15,21 @@ from theano.tensor.shared_randomstreams import RandomStreams
 from dae_class import dA
 from theano_class import theano_top
 
+class sentence:
+    
+    #Instantiation function
+    def __init__( self, word_list, word_vecs ):
+        self.words = word_list
+        self.size = len( word_list )
+        #Maybe do one last check for non-alphanumerics here
+        self.data = [ word_vecs[ dictionary[ word_list[ i ] ] ] for i in range( self.size ) ]
+        
+    def sent_print( self ):
+        print self.size, self.words,  self.data, '\n'
+        
+    def get_size( self ):
+        return self.size
+
 corruption_level = 0.2 #[ 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ]
 learning_rate = [ 0.1, 1, 10, 100, 1000 ]
 batch_size = [ 1000.0, 2000.0, 3000.0, 5000.0 ]
@@ -55,11 +70,21 @@ autoencoder = dA( numpy_rng=rng, weight_reg=0.05, sparsity = 0.05,
 
                 
 theanos = theano_top( autoencoder, stopping_condition, 0.2, 10,
-                    '10_train.npy', '10_test.npy', 1000.0 )                
+                    '10_train.npy', '10_test.npy', 5000.0 )                
                 
-theanos.run_train( 1000.0, 20 )                
+theanos.run_train( 5000.0, 20 )                
             
-theanos.run_test( 1000.0, testing_epochs )                
+theanos.run_test( 5000.0, 5 )
+
+word_vectors = np.load( "word_vec_reg_array.npy" )
+
+new_string = "The man ate dinner with his family and good friends"
+
+new_sentence = sentence( new_string.split(), word_vectors )
+
+input_sentence = numpy.array( new_sentence.data, float ).reshape( 2000 )
+
+theanos.get_results( input_sentence, numpy.array( [ 1, 0, 1, 1, 1, 0, 1, 1, 1, 1 ] ) )                
                                 
                                                 
                                                                 
