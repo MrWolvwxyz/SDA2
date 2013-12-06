@@ -180,12 +180,19 @@ class dA(object):
         tilde_x = self.get_corrupted_input(self.x, corruption_level)
         y = self.get_hidden_values(tilde_x)
         z = self.get_reconstructed_input(y)
+        self.print_set( y )
+        self.print_set( z )
         if T.sum( z ) == 0: print 'well fuck'
         # note : we sum over the size of a datapoint; if we are using
         #        minibatches, L will be a vector, with one entry per
         #        example in minibatch
         avg_act = T.mean( y, axis = 1 )
         sparse_penalty = T.sum( self.sparsity * T.log( self.sparsity / avg_act ) + ( 1 - self.sparsity ) * T.log( ( 1 - self.sparsity ) / ( 1 - avg_act ) ) )
+        """
+        self.print_set( T.sum(self.x * T.log(z) + (1 - self.x) * T.log(1 - z), axis = 1) )
+        self.print_set( 0.5 * self.weight_reg * T.sum( self.W ** 2 ) )
+        self.print_set( self.sp_penalty * sparse_penalty )
+        """
         L = ( 1.00 / ( num_examples * self.n_visible ) ) * T.sum(self.x * T.log(z) + (1 - self.x) * T.log(1 - z), axis = 1) + 0.5 * self.weight_reg * T.sum( self.W ** 2 ) + self.sp_penalty * sparse_penalty
         #L = ( 1.00 / ( 2450 * self.n_visible ) ) * T.sum( 0.5 * (self.x - z) ** 2, axis = 1) + self.weight_reg * T.sum( self.W )
         # note : L is now a vector, where each element is the
@@ -204,3 +211,19 @@ class dA(object):
             updates.append((param, param - learning_rate * gparam))
 
         return (cost, updates)
+        
+        
+    def print_set(self, input):
+        print "# type(python)", type(input)
+        print "# type(theano)", input.type
+        print "# dimensions  ", input.ndim
+        if input.ndim == 2:
+            for row in theano.function([], input)():
+                for val in row:
+                    print "%0.3f" % val,
+                print 
+        elif input.ndim == 1:
+            for row in theano.function([], input)():
+                print "%d" % row
+        else:
+            return 
