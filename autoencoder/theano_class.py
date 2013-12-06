@@ -47,8 +47,8 @@ class theano_top:
         
         self.train = theano.function( [ self.start_index, self.end_index ], self.cost, updates = self.updates,
             givens = { da.x : self.shared_train [ self.start_index : self.end_index ] } )
-        self.test = theano.function( [ self.start_index, self.end_index ], self.cost, updates = self.updates,
-            givens = { da.x : self.shared_test [ self.start_index : self.end_index ] } )
+        self.test = theano.function( [], self.cost,
+            givens = { da.x : self.shared_test } )
     
         
     def print_set(self, name, data):
@@ -168,7 +168,7 @@ class theano_top:
                 start = ind * batch_size
                 end = start + batch_size
                 if end > test_size: end = test_size
-                c.append( self.train( start, end ) )
+                c.append( self.test( start, end ) )
             #numpy.save( time.strftime("%Y%m%d-%H%M%S") + str( epoch ) + 'cost', c )
             print 'Testing epoch %d, cost ' % epoch, numpy.mean( c )
             if numpy.mean( c ) <= self.stop_val:
