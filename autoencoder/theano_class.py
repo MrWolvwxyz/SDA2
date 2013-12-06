@@ -23,7 +23,7 @@ import dae_class
 class theano_top:
     
     def __init__( self, da, stop_val, corruption, rate, train_path, test_path, batch_size ):
-        self.fid = open( 'output.txt', 'r+' )
+        #self.fid = open( 'output.txt', 'r+' )
         self.model = da
         self.stop_val = stop_val
         self.last_cost = 9999
@@ -35,8 +35,8 @@ class theano_top:
         
         self.shared_train = theano.shared( self.train_set )
         self.shared_test = theano.shared( self.test_set )
-        self.print_set( self.shared_train, "train_set" )
-        self.print_set( self.shared_test, "test_set" )
+        self.print_set( "train_set", self.shared_train )
+        self.print_set( "test_set", self.shared_test )
         
         self.learning_rate = rate
         self.corruption_level = corruption
@@ -51,7 +51,7 @@ class theano_top:
             givens = { da.x : self.shared_test [ self.start_index : self.end_index ] } )
     
         
-    def print_set(self, data, name):
+    def print_set(self, name, data):
         with open( name + ".txt", "w+") as handle:
             print >>handle, "# type(python)", type(data)
             print >>handle, "# type(theano)", data.type
@@ -124,11 +124,17 @@ class theano_top:
             if numpy.mean( c ) > self.last_cost:
                 self.learning_rate = self.learning_rate / 2
             self.last_cost = numpy.mean( c )
-            if numpy.mean( c ) <= self.stop_val: return
+            if numpy.mean( c ) <= self.stop_val:
+                print ( time.clock() - start_time )
+                self.print_set( 'weights1_train', self.model.W )
+                self.print_set( 'bias1_train', self.model.b )
+                self.print_set( 'bias2_train', self.model.b_prime )
+                return
         #self.print_parts()
         print ( time.clock() - start_time )
-        with open( "autoencoder_train.obj", 'wb' ) as output:
-            pickle.dump( self.model, output )
+        self.print_set( 'weights1_train', self.model.W )
+        self.print_set( 'bias1_train', self.model.b )
+        self.print_set( 'bias2_train', self.model.b_prime )
         
             
     def run_test( self, batch_size, epochs ):
@@ -146,10 +152,17 @@ class theano_top:
                 c.append( self.train( start, end ) )
             #numpy.save( time.strftime("%Y%m%d-%H%M%S") + str( epoch ) + 'cost', c )
             print 'Testing epoch %d, cost ' % epoch, numpy.mean( c )
+            if numpy.mean( c ) <= self.stop_val:
+                print ( time.clock() - start_time )
+                self.print_set( 'weights1_test', self.model.W )
+                self.print_set( 'bias1_test', self.model.b )
+                self.print_set( 'bias2_test', self.model.b_prime )
+                return
         #self.print_parts()
-        print ( time.clock() - start_time )    
-        with open( "autoencoder_test.obj", 'wb' ) as output2:
-            pickle.dump( self.model, output2 )
+        print ( time.clock() - start_time )
+        self.print_set( 'weights1_test', self.model.W )
+        self.print_set( 'bias1_test', self.model.b )
+        self.print_set( 'bias2_test', self.model.b_prime )
         
         
         
