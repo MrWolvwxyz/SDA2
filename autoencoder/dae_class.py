@@ -15,7 +15,7 @@ from theano.tensor.shared_randomstreams import RandomStreams
 class dA(object):
     """Denoising Auto-Encoder class (dA)
 
-    A denoising autoencoders tries to reconstruct the input from a corrupted
+    Am denoising autoencoders tries to reconstruct the input from a corrupted
     version of it by projecting it first in a latent space and reprojecting
     it afterwards back in the input space. Please refer to Vincent et al.,2008
     for more details. If x is the input then equation (1) computes a partially
