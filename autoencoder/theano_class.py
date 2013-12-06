@@ -126,15 +126,34 @@ class theano_top:
             self.last_cost = numpy.mean( c )
             if numpy.mean( c ) <= self.stop_val:
                 print ( time.clock() - start_time )
-                self.print_set( 'weights1_train', self.model.W )
-                self.print_set( 'bias1_train', self.model.b )
-                self.print_set( 'bias2_train', self.model.b_prime )
+                numpy.save( 'weights1_train', self.model.W.get_value() )
+                numpy.save( 'bias1_train', self.model.b.get_value() )
+                numpy.save( 'bias2_train', self.model.b_prime.get_value() )
                 return
         #self.print_parts()
         print ( time.clock() - start_time )
-        self.print_set( 'weights1_train', self.model.W )
-        self.print_set( 'bias1_train', self.model.b )
-        self.print_set( 'bias2_train', self.model.b_prime )
+        numpy.save( 'weights1_train', self.model.W.get_value() )
+        numpy.save( 'bias1_train', self.model.b.get_value() )
+        numpy.save( 'bias2_train', self.model.b_prime.get_value() )
+        
+        
+        
+        
+    def get_results( self, sentence_vector, missing_word_inds ):
+				corrupted_sentence = sentence_vector * missing_word_inds.repeat( 200 )
+				hidden_activations = self.model.get_hidden_values( corrupted_sentence )
+				output = self.model.get_reconstructed_input( hidden_activations )
+				f = open( "word_vectors.txt", 'r' )
+				lines = f.readlines()
+				num_corrupted = 0
+				for i in range( len( missing_word_inds ) ):
+						if missing_word_inds[ i ] == 0:
+								lines.append( "my_vector_%i " + str( output[ 200 * i : 200 * ( i + 1 ) ] ) )
+				f2 = open( "word_vectors_test.txt", 'w' )
+
+				f2.write( lines )
+								
+				
         
             
     def run_test( self, batch_size, epochs ):
@@ -154,15 +173,15 @@ class theano_top:
             print 'Testing epoch %d, cost ' % epoch, numpy.mean( c )
             if numpy.mean( c ) <= self.stop_val:
                 print ( time.clock() - start_time )
-                self.print_set( 'weights1_test', self.model.W )
-                self.print_set( 'bias1_test', self.model.b )
-                self.print_set( 'bias2_test', self.model.b_prime )
+                numpy.save( 'weights1_test', self.model.W.get_value() )
+                numpy.save( 'bias1_test', self.model.b.get_value() )
+                numpy.save( 'bias2_test', self.model.b_prime.get_value() )
                 return
         #self.print_parts()
         print ( time.clock() - start_time )
-        self.print_set( 'weights1_test', self.model.W )
-        self.print_set( 'bias1_test', self.model.b )
-        self.print_set( 'bias2_test', self.model.b_prime )
+        numpy.save( 'weights1_test', self.model.W.get_value() )
+        numpy.save( 'bias1_test', self.model.b.get_value() )
+        numpy.save( 'bias2_test', self.model.b_prime.get_value() )
         
         
         
