@@ -193,7 +193,7 @@ class dA(object):
         self.print_set( 0.5 * self.weight_reg * T.sum( self.W ** 2 ) )
         self.print_set( self.sp_penalty * sparse_penalty )
         """
-        L = ( 1.00 / ( num_examples * self.n_visible ) ) * T.sum(self.x * T.log(z) + (1 - self.x) * T.log(1 - z), axis = 1) + 0.5 * self.weight_reg * T.sum( self.W ** 2 ) + self.sp_penalty * sparse_penalty
+        L = - ( T.sum(self.x * T.log(z) + (1 - self.x) * T.log(1 - z), axis = 1) ) + 0.5 * self.weight_reg * T.sum( self.W ** 2 ) + self.sp_penalty * sparse_penalty
         #L = ( 1.00 / ( 2450 * self.n_visible ) ) * T.sum( 0.5 * (self.x - z) ** 2, axis = 1) + self.weight_reg * T.sum( self.W )
         # note : L is now a vector, where each element is the
         #        cross-entropy cost of the reconstruction of the
