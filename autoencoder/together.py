@@ -4,7 +4,7 @@ import re
 import scipy as sci
 import numpy
 import string
-import cPickle
+import cPickle as pickle
 import gzip
 import time
 
@@ -22,6 +22,7 @@ class sentence:
         self.words = word_list
         self.size = len( word_list )
         #Maybe do one last check for non-alphanumerics here
+        print self.words, self.size
         self.data = [ word_vecs[ dictionary[ word_list[ i ] ] ] for i in range( self.size ) ]
         
     def sent_print( self ):
@@ -64,7 +65,7 @@ for sparse_penalty in sparsity_penalty:
 x = T.matrix('x')
 rng = numpy.random.RandomState(123)
 theano_rng = RandomStreams(rng.randint(2 ** 30))
-autoencoder = dA( numpy_rng=rng, weight_reg=0.05, sparsity = 0.05,
+autoencoder = dA( numpy_rng=rng, weight_reg=0.085, sparsity = 0.05,
             sp_penalty = 3, theano_rng=theano_rng, input=x, n_visible=2000,
             n_hidden = 4000, sentence_length = 10 )     
 
@@ -72,13 +73,14 @@ autoencoder = dA( numpy_rng=rng, weight_reg=0.05, sparsity = 0.05,
 theanos = theano_top( autoencoder, stopping_condition, 0.2, 10,
                     '10_train.npy', '10_test.npy', 5000.0 )                
                 
-theanos.run_train( 5000.0, 20 )                
+theanos.run_train( 5000.0, 10 )                
             
-theanos.run_test( 5000.0, 5 )
+#theanos.run_test( 5000.0, 5 )
 
-word_vectors = np.load( "word_vec_reg_array.npy" )
+word_vectors = numpy.load( "word_vec_reg_array.npy" )
+dictionary = pickle.load( open( "dictionary.p", 'r+' ) )
 
-new_string = "The man ate dinner with his family and good friends"
+new_string = 'the man ate dinner with his family and good friends'
 
 new_sentence = sentence( new_string.split(), word_vectors )
 
