@@ -66,7 +66,7 @@ x = T.matrix('x')
 rng = numpy.random.RandomState(123)
 theano_rng = RandomStreams(rng.randint(2 ** 30))
 autoencoder = dA( numpy_rng=rng, weight_reg=0.085, sparsity = 0.05,
-            sp_penalty = 3, theano_rng=theano_rng, input=x, n_visible=2000,
+            sp_penalty = 0.03, theano_rng=theano_rng, input=x, n_visible=2000,
             n_hidden = 4000, sentence_length = 10 )     
 
                 
