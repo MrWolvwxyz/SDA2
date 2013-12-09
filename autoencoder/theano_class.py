@@ -83,8 +83,8 @@ class theano_top:
         #self.print_set( thing2, "sum" )
         
         
-        self.print_set( self.model.W, "corruption:" + str( self.corruption_level ) + time.strftime( " %Y-%m-%d-%H:%M:%S") + " weights" )
-        self.print_set( self.model.b, "corruption:" + str( self.corruption_level ) + time.strftime( " %Y-%m-%d-%H:%M:%S") + " bias" )
+        self.print_set( "weights", self.model.W )
+        self.print_set( "bias", self.model.b )
         
         #self.fid.write( til_printed )
         #self.fid.write( ' \n\n\n' )
@@ -142,24 +142,25 @@ class theano_top:
         
                
     def get_results( self, sentence_vector, missing_word_inds ):
-			corrupted_sentence = sentence_vector * missing_word_inds.repeat( 200 )
-			hidden_activations = self.model.get_hidden_values( corrupted_sentence )
-			output = self.model.get_reconstructed_input( hidden_activations )
-			f = open( "word_vectors.txt", 'r' )
-			lines = f.readlines()
+        self.print_parts()
+        corrupted_sentence = sentence_vector * missing_word_inds.repeat( 200 )
+	hidden_activations = self.model.get_hidden_values( corrupted_sentence )
+	output = self.model.get_reconstructed_input( hidden_activations )
+	f = open( "word_vectors.txt", 'r' )
+	lines = f.readlines()
 
-			f2 = open( "word_vectors_test.txt", 'w' )
-			for line in lines:
-				 f2.write( line )
-			num_corrupted = 0
-			for i in range( len( missing_word_inds ) ):
-				 if missing_word_inds[ i ] == 0:
-						 line = ( "my_vector_%d " % num_corrupted )
-						 num_corrupted = num_corrupted + 1
-						 for row in theano.function([], output[ 200 * i : 200 * ( i + 1 ) ] )():
-								 row = ( row - 1 ) * 2
-								 line += ( str( row ) + " " )
-						 f2.write( line + '\n' )												
+	f2 = open( "word_vectors_test.txt", 'w' )
+	for line in lines:
+		 f2.write( line )
+	num_corrupted = 0
+	for i in range( len( missing_word_inds ) ):
+	   if missing_word_inds[ i ] == 0:
+	       line = ( "my_vector_%d " % num_corrupted )
+	       num_corrupted = num_corrupted + 1
+	       for row in theano.function([], output[ 200 * i : 200 * ( i + 1 ) ] )():
+	           row = ( row - 1 ) * 2
+		   line += ( str( row ) + " " )
+	       f2.write( line + '\n' )												
             
     def run_test( self, batch_size, epochs ):
         #num_train_batches = math.ceil( float(len( self.train_set ) ) / float( batch_size ) )
