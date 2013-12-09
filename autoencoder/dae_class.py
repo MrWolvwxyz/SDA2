@@ -187,7 +187,7 @@ class dA(object):
         #        minibatches, L will be a vector, with one entry per
         #        example in minibatch
         avg_act = T.mean( y, axis = 1 )
-        sparse_penalty = T.sum( self.sparsity * T.log( self.sparsity / avg_act ) + ( 1 - self.sparsity ) * T.log( ( 1 - self.sparsity ) / ( 1 - avg_act ) ) )
+        sparse_penalty = ( 1 / self.n_hidden ) * T.sum( self.sparsity * T.log( self.sparsity / avg_act ) + ( 1 - self.sparsity ) * T.log( ( 1 - self.sparsity ) / ( 1 - avg_act ) ) )
         """
         self.print_set( T.sum(self.x * T.log(z) + (1 - self.x) * T.log(1 - z), axis = 1) )
         self.print_set( 0.5 * self.weight_reg * T.sum( self.W ** 2 ) )
