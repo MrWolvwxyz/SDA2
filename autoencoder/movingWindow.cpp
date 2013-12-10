@@ -62,7 +62,7 @@ int main() {
                              tempSentence += " ";
                          }
                          tempSentence += words[j+i];
-                         if(i==2) {
+                         if(i==SENTENCE_LENGTH-1) {
                              cout << tempSentence << endl;
                              tempSentence = ""; 
                          }
