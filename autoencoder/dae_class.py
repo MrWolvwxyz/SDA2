@@ -182,7 +182,7 @@ class dA(object):
         z = self.get_reconstructed_input(y)
         #self.print_set( y )
         #self.print_set( z )
-        if T.sum( z ) == 0: print 'well fuck'
+        if T.sum( z ) == 0: print 'w'
         # note : we sum over the size of a datapoint; if we are using
         #        minibatches, L will be a vector, with one entry per
         #        example in minibatch
