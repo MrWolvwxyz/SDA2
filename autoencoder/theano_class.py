@@ -116,7 +116,7 @@ class theano_top:
             for ind in xrange( int( num_train_batches ) ):
                 #print ind
                 start = ind * batch_size
-                end = start + batch_size
+                end = start + batch_size - 1 #OFF BY 1 ERROR
                 if end > train_size: end = train_size
                 c.append( self.train( start, end ) )
             #numpy.save( time.strftime("%Y-%m-%d-%H:%M:%S") + str( epoch ) + 'cost', c )
