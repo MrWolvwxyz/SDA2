@@ -135,7 +135,7 @@ class dA(object):
             self.x = T.dmatrix(name='input')
         else:
             self.x = input
-        
+
         self.params = [self.W, self.b, self.b_prime]
 
     def get_corrupted_input(self, input, corruption_level):
@@ -160,7 +160,7 @@ class dA(object):
                 correctly as it only support float32 for now.
 				"""
         return self.numpy_rng.binomial( 1, 1 - corruption_level, self.num_words ).repeat( 200 ) * input
-				
+
     def get_hidden_values(self, input):
         """ Computes the values of the hidden layer """
         return T.nnet.sigmoid(T.dot(input, self.W) + self.b)
@@ -172,13 +172,13 @@ class dA(object):
 
         """
         return  T.nnet.sigmoid(T.dot(hidden, self.W_prime) + self.b_prime)
-        #return  T.tanh(T.dot(hidden, self.W_prime) + self.b_prime)   
+        #return  T.tanh(T.dot(hidden, self.W_prime) + self.b_prime)
     def get_cost_updates( self, corruption_level, learning_rate, num_examples ):
         """ This function computes the cost and the updates for one trainng
         step of the dA """
 
-        tilde_x = self.get_corrupted_input(self.x, corruption_level)
-        y = self.get_hidden_values(tilde_x)
+        #tilde_x = self.get_corrupted_input(self.x, corruption_level)
+        y = self.get_hidden_values(self.x)
         z = self.get_reconstructed_input(y)
         #self.print_set( y )
         #self.print_set( z )
@@ -193,7 +193,7 @@ class dA(object):
         self.print_set( 0.5 * self.weight_reg * T.sum( self.W ** 2 ) )
         self.print_set( self.sp_penalty * sparse_penalty )
         """
-        L = - ( T.sum(self.x * T.log(z) + (1 - self.x) * T.log(1 - z), axis = 1) ) + 0.5 * self.weight_reg * T.sum( self.W ** 2 ) + self.sp_penalty * sparse_penalty
+        L = - ( T.sum(self.x * T.log(z) + (1 - self.x) * T.log(1 - z), axis = 1) ) + 0.05 * self.weight_reg * T.sum( self.W ** 2 )
         #L = ( 1.00 / ( 2450 * self.n_visible ) ) * T.sum( 0.5 * (self.x - z) ** 2, axis = 1) + self.weight_reg * T.sum( self.W )
         # note : L is now a vector, where each element is the
         #        cross-entropy cost of the reconstruction of the
@@ -211,8 +211,8 @@ class dA(object):
             updates.append((param, param - learning_rate * gparam))
 
         return (cost, updates)
-        
-        
+
+
     def print_set(self, input):
         print "# type(python)", type(input)
         print "# type(theano)", input.type
@@ -221,9 +221,9 @@ class dA(object):
             for row in theano.function([], input)():
                 for val in row:
                     print "%0.3f" % val,
-                print 
+                print
         elif input.ndim == 1:
             for row in theano.function([], input)():
                 print "%d" % row
         else:
-            return 
+            return
