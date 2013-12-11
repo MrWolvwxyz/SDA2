@@ -8,11 +8,11 @@ import string
 class sentence:
 
         #Instantiation function
-        def __init__( self, word_list, word_vecs ):
-            self.words = word_list
-            self.size = len( word_list )
+        def __init__( self, wordListIndex, word_vecs ):
+            self.words = wordListIndex
+            self.size = len( wordListIndex )
             #Maybe do one last check for non-alphanumerics here
-            self.data = [ word_vecs[ dictionary[ word_list[ i ] ] ] for i in range( self.size ) ]
+            self.data = [ word_vecs[wordListIndex [i] ] for i in range( self.size ) ]
 
         def sent_print( self ):
             print self.size, self.words,  self.data, '\n'
@@ -58,7 +58,7 @@ word_vectors = ( word_vectors -low ) / ( high - low )
 np.save( "word_vec_reg_array", word_vectors )
 
 #input 3-word sentence
-f = open("3_word_sentences.txt","r+")
+f = open("3_word_sentence_10.txt","r+")
 f.seek(0)
 sentences = f.readlines()
 num_sentence = len(sentences)
@@ -72,7 +72,7 @@ for sen in sentences:
     s = sen_split[0]
     #print s
     valid = True
-    tempList = []
+    #tl_set = [ np.ndarray( shape = ( sizes[ i ], shapes[ i ] ), dtype = float ) for i in range( 18 ) ]iempList = []
     tempIndexes = []
     word = s.split(' ')
     #print len(word)
@@ -80,7 +80,7 @@ for sen in sentences:
         #print w
         if w in dictionary:
             tempIndexes.append( dictionary[ w ])
-            tempList.append(word_vectors[dictionary[w]])
+            #tempList.append(word_vectors[dictionary[w]])
             #print len(tempList)
         else:
             valid = False
@@ -88,26 +88,39 @@ for sen in sentences:
             #print len(tempList)
             break
     if(valid):
-         listOfLines.append(tempList)
+         #listOfLines.append(tempList)
          listOfLineIndexes.append(tempIndexes)
 
 f.close()
-#print len(listOfLines)
+#print len(listOfLineIndexes)
+#print len(listOfLineIndexes[1])
+training_set = [ sentence( listOfLineIndexes[ i ], word_vectors ) for i in range( len( listOfLineIndexes ) ) ]
 
-#training_set = sentence(listOfLines, word_vectors)
 size = num_sentence
 shapes = 3 * 200
 
-final_set = np.ndarray(shape = (size, shapes), dtype = float)
+final_set = np.ndarray( shape = ( size, shapes ), dtype = float )
 
-final_set = np.array(listOfLines, float)
+for i in range(size):
+    final_set[i] = np.array(training_set[i].data, float).reshape(shapes)
+"""
+for i in range(len(final_set)):
+    print final_set[i][0]
+print final_set.shape
+"""
 
-perm = np.random.permutation( len( final_set ) )
-index_80 = 0.8 * len( perm )
-np.save( 'train', final_set[ perm[ : index_80 ] ])
-np.save( 'test', final_set[ perm[index_80 :  ] ])
+percent = 0.8
+index = int(percent * num_sentence)
+np.save( 'train', final_set[ : index ] )
+np.save( 'test', final_set[index :  ])
+"""
+train_x =np.load('train.npy','r')
+for i in range(len(train_x)):
+    print train_x[i][0]
+print train_x.shape
 
-
-
-
-
+test_x = np.load('test.npy','r')
+for i in range(len(test_x)):
+    print test_x[i][0]
+print test_x.shape
+"""
