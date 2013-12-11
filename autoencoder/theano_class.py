@@ -116,9 +116,8 @@ class theano_top:
             for ind in xrange( int( num_train_batches ) ):
                 #print ind
                 start = ind * batch_size
-                end = start + batch_size - 1 #OFF BY 1 ERROR
-                #if end > train_size: end = train_size
-                if end > train_size: end = start + train_size 
+                end = start + batch_size
+                if end > train_size: end = train_size
                 c.append( self.train( start, end ) )
             #numpy.save( time.strftime("%Y-%m-%d-%H:%M:%S") + str( epoch ) + 'cost', c )
             print 'Training epoch %d, cost ' % epoch, numpy.mean( c )
@@ -159,7 +158,7 @@ class theano_top:
 	       line = ( "my_vector_%d " % num_corrupted )
 	       num_corrupted = num_corrupted + 1
 	       for row in theano.function([], output[ 200 * i : 200 * ( i + 1 ) ] )():
-	           row = ( row - 1 ) * 2
+	           row = ( ( row * 0.207249 ) - 0.103108 )
 		   line += ( str( row ) + " " )
 	       f2.write( line + '\n' )												
             
