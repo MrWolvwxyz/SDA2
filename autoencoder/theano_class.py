@@ -117,7 +117,8 @@ class theano_top:
                 #print ind
                 start = ind * batch_size
                 end = start + batch_size - 1 #OFF BY 1 ERROR
-                if end > train_size: end = train_size
+                #if end > train_size: end = train_size
+                if end > train_size: end = start + train_size 
                 c.append( self.train( start, end ) )
             #numpy.save( time.strftime("%Y-%m-%d-%H:%M:%S") + str( epoch ) + 'cost', c )
             print 'Training epoch %d, cost ' % epoch, numpy.mean( c )
