@@ -40,7 +40,7 @@ int main() {
     while(getline(cin, sentence)) {
         char *cstr = new char[sentence.length() + 1];
         strcpy(cstr, sentence.c_str());
-        if(CountWords(cstr) == 3) {
+        if(CountWords(cstr) == SENTENCE_LENGTH) {
             cout << sentence <<  endl;
         }
         else {
